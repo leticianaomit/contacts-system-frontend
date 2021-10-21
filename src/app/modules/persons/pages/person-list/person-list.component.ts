@@ -29,10 +29,7 @@ export class PersonListComponent implements OnInit {
   ];
   displayedColumns: string[] = ['name', 'id'];
   dataSource = new MatTableDataSource<any>();
-  pageSizeOptions = [10, 20, 50];
-  pageSize = 10;
-  pageIndex = 0;
-  sortBy = '';
+  pageSizeOptions = [10, 20, 50, 100];
 
   dialogSubscription!: Subscription;
 

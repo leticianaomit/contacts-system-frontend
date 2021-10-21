@@ -44,12 +44,11 @@ export class ContactListComponent implements OnInit {
   ];
   displayedColumns: string[] = ['name', 'email', 'phone', 'whatsapp', 'id'];
   dataSource = new MatTableDataSource<any>();
-  pageSizeOptions = [10, 20, 50];
-  pageSize = 10;
-  pageIndex = 0;
-  sortBy = '';
+  pageSizeOptions = [10, 20, 50, 100];
 
   dialogSubscription!: Subscription;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private contactsService: ContactsService,
@@ -58,6 +57,10 @@ export class ContactListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContacts();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   loadContacts() {

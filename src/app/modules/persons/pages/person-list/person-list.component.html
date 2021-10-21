@@ -60,7 +60,7 @@
           </td>
         </ng-container>
       </ng-container>
-      
+
       <tr class="mat-row person-list__empty" *matNoDataRow>
         <td class="mat-cell" colspan="5">Nenhuma pessoa foi encontrada</td>
       </tr>
@@ -68,5 +68,8 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons>
+    </mat-paginator>
   </div>
 </mat-card>
