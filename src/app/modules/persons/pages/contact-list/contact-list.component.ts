@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { TableColumn } from 'src/app/core/models/common/table';
+import { TableColumn } from 'src/app/shared/models/table';
 import { ResponseContactDTO } from 'src/app/core/models/contact';
 import { ContactsService } from 'src/app/core/services/contacts.service';
 import { ContactFormComponent } from '../../components/contact-form/contact-form.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
-import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-contact-list',
@@ -45,18 +45,28 @@ export class ContactListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'phone', 'whatsapp', 'id'];
   dataSource = new MatTableDataSource<any>();
   pageSizeOptions = [10, 20, 50, 100];
+  idPerson: string;
 
   dialogSubscription!: Subscription;
+  contactListSubscription!: Subscription;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private contactsService: ContactsService,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private route: ActivatedRoute
+  ) {
+    this.idPerson = this.route.snapshot.paramMap.get('id') as string;
+  }
 
   ngOnInit(): void {
     this.loadContacts();
+  }
+
+  ngOnDestroy() {
+    this.contactListSubscription?.unsubscribe();
+    this.dialogSubscription?.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -64,13 +74,17 @@ export class ContactListComponent implements OnInit {
   }
 
   loadContacts() {
-    this.contactsService.getAll().subscribe((contacts) => {
-      this.dataSource.data = contacts;
-    });
+    this.contactsService.getContactList(this.idPerson);
+    this.contactListSubscription = this.contactsService.contactList$.subscribe(
+      (data) => {
+        this.dataSource.data = data;
+      }
+    );
   }
 
   onClickBtnAddContact() {
     this.dialog.open(ContactFormComponent, {
+      data: { idPerson: this.idPerson },
       width: '600px',
       autoFocus: false,
     });
@@ -90,6 +104,7 @@ export class ContactListComponent implements OnInit {
   }
 
   onClickBtnEditContact(contact: ResponseContactDTO) {
+    contact.idPerson = this.idPerson
     this.dialog.open(ContactFormComponent, {
       data: contact,
       width: '600px',
@@ -97,20 +112,9 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-  deleteContact(id: string) {
-    this.contactsService
-      .delete(id)
-      .pipe(take(1))
-      .subscribe(
-        () => {
-          console.log('ok');
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          this.dialog.closeAll();
-        }
-      );
+  async deleteContact(id: string) {
+    await this.contactsService.deleteContact(id);
+    this.contactsService.getContactList(this.idPerson);
+    this.dialog.closeAll();
   }
 }

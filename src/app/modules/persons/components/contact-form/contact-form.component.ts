@@ -1,11 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router,
-} from '@angular/router';
 import { ResponseContactDTO } from 'src/app/core/models/contact';
 import { ContactsService } from 'src/app/core/services/contacts.service';
 
@@ -15,8 +10,8 @@ import { ContactsService } from 'src/app/core/services/contacts.service';
   styleUrls: ['./contact-form.component.scss'],
 })
 export class ContactFormComponent implements OnInit {
-  idContact: string = '';
-  idPerson: string = '';
+  idContact!: string;
+  idPerson: string;
   contactForm: FormGroup = this.fb.group({
     name: [null, Validators.required],
     email: [null, Validators.email],
@@ -28,10 +23,10 @@ export class ContactFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private contactData: ResponseContactDTO,
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private contactsService: ContactsService
+    private contactsService: ContactsService,
   ) {
-    this.idPerson = this.route.snapshot.paramMap.get('id') as string;
+    this.idPerson = this.contactData?.idPerson;
+
     if (this.contactData?.id) {
       this.idContact = this.contactData.id;
       this.contactForm.patchValue(this.contactData);
@@ -52,25 +47,17 @@ export class ContactFormComponent implements OnInit {
     this.dialog.closeAll();
   }
 
-  private updateContact(contact: ResponseContactDTO) {
-    this.contactsService.update(this.idContact, contact).subscribe(
-      () => {
-        console.log('ok');
-      },
-      (err) => {
-        console.log('err');
-      }
-    );
+  refreshContactList() {
+    this.contactsService.getContactList(this.idPerson);
   }
 
-  private saveContact(contact: ResponseContactDTO) {
-    this.contactsService.create(contact).subscribe(
-      () => {
-        console.log('ok');
-      },
-      (err) => {
-        console.log('err');
-      }
-    );
+  private async updateContact(contact: ResponseContactDTO) {
+    await this.contactsService.updateContact(this.idContact, contact);
+    this.refreshContactList();
+  }
+
+  private async saveContact(contact: ResponseContactDTO) {
+    await this.contactsService.saveContact(contact);
+    this.refreshContactList();
   }
 }

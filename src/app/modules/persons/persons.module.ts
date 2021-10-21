@@ -11,11 +11,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { ContactListComponent } from './pages/contact-list/contact-list.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatDividerModule } from "@angular/material/divider";
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PersonFormComponent } from './components/person-form/person-form.component';
+import { ContactsService } from 'src/app/core/services/contacts.service';
+import { PersonsService } from 'src/app/core/services/persons.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,9 @@ import { PersonFormComponent } from './components/person-form/person-form.compon
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
+  providers: [ContactsService, PersonsService]
 })
 export class PersonsModule {}

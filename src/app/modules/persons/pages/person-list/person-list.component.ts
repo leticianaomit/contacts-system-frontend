@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { TableColumn } from 'src/app/core/models/common/table';
+import { TableColumn } from 'src/app/shared/models/table';
 import { ResponsePersonDTO } from 'src/app/core/models/person';
 import { PersonsService } from 'src/app/core/services/persons.service';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
@@ -32,6 +32,9 @@ export class PersonListComponent implements OnInit {
   pageSizeOptions = [10, 20, 50, 100];
 
   dialogSubscription!: Subscription;
+  personListSubscription!: Subscription;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private personsService: PersonsService,
@@ -44,13 +47,21 @@ export class PersonListComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.personListSubscription?.unsubscribe();
     this.dialogSubscription?.unsubscribe();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   loadPersons() {
-    this.personsService.getAll().subscribe((persons) => {
-      this.dataSource.data = persons;
-    });
+    this.personsService.getPersonList();
+    this.personListSubscription = this.personsService.personList$.subscribe(
+      (data) => {
+        this.dataSource.data = data;
+      }
+    );
   }
 
   onClickBtnContacts(id: string) {
@@ -85,20 +96,9 @@ export class PersonListComponent implements OnInit {
     });
   }
 
-  deletePerson(id: string) {
-    this.personsService
-      .delete(id)
-      .pipe(take(1))
-      .subscribe(
-        () => {
-          console.log('ok');
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          this.dialog.closeAll();
-        }
-      );
+  async deletePerson(id: string) {
+    await this.personsService.deletePerson(id);
+    this.personsService.getPersonList();
+    this.dialog.closeAll();
   }
 }

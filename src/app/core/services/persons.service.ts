@@ -1,30 +1,116 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ResponsePersonDTO } from '../models/person';
+import { PersonsApiService } from '../http/persons-api.service';
+import { SnackbarService } from '../../shared/services/snackbar.service';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PersonsService {
-  constructor(private readonly http: HttpClient) {}
+  private personList = new BehaviorSubject<ResponsePersonDTO[]>([]);
+  personList$ = this.personList.asObservable();
 
-  getAll(): Observable<ResponsePersonDTO[]> {
-    return this.http.get<ResponsePersonDTO[]>(`persons`);
+  constructor(
+    private personsApiService: PersonsApiService,
+    private snackbarService: SnackbarService
+  ) {}
+
+  setPersonList(data: ResponsePersonDTO[]) {
+    this.personList.next(data);
   }
 
-  create(contact: ResponsePersonDTO): Observable<any> {
-    return this.http.post(`persons`, contact);
+  getPersonList() {
+    this.personsApiService.getAll().subscribe(
+      (data) => {
+        this.setPersonList(data);
+      },
+      (_err) => {
+        this.snackbarService.showFailureSnackbar(
+          `Não foi possível buscar os registros!`,
+          'Tente novamente'
+        );
+      }
+    );
   }
 
-  update(
+  savePerson(person: ResponsePersonDTO): Promise<void> {
+    return new Promise((resolve) => {
+      this.personsApiService
+        .create(person)
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            this.snackbarService.showSuccessSnackbar(
+              `Registro salvo com sucesso!`,
+              'OK'
+            );
+          },
+          (_err) => {
+            this.snackbarService.showFailureSnackbar(
+              `Não foi possível salvar este registro!`,
+              'Tente novamente'
+            );
+          },
+          () => {
+            resolve();
+          }
+        );
+    });
+  }
+
+  updatePerson(
     id: ResponsePersonDTO['id'],
-    contact: ResponsePersonDTO
-  ): Observable<any> {
-    return this.http.put(`persons/${id}`, contact);
+    person: ResponsePersonDTO
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      this.personsApiService
+        .update(id, person)
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            this.snackbarService.showSuccessSnackbar(
+              `Registro atualizado com sucesso!`,
+              'OK'
+            );
+          },
+          (_err) => {
+            this.snackbarService.showFailureSnackbar(
+              `Não foi possível atualizar este registro!`,
+              'Tente novamente'
+            );
+          },
+          () => {
+            console.log(123);
+            resolve();
+          }
+        );
+    });
   }
 
-  delete(id: ResponsePersonDTO['id']): Observable<any> {
-    return this.http.delete(`persons/${id}`);
+  deletePerson(id: ResponsePersonDTO['id']): Promise<void> {
+    return new Promise((resolve) => {
+      this.personsApiService
+        .delete(id)
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            this.snackbarService.showSuccessSnackbar(
+              `Registro removido com sucesso!`,
+              'OK'
+            );
+          },
+          (_err) => {
+            this.snackbarService.showFailureSnackbar(
+              `Não foi possível remover este registro!`,
+              'Tente novamente'
+            );
+          },
+          () => {
+            resolve();
+          }
+        );
+    });
   }
 }

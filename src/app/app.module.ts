@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from './shared/layout/layout.module';
 import { InterceptorModule } from './core/interceptor/interceptor.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +18,7 @@ import { InterceptorModule } from './core/interceptor/interceptor.module';
     HttpClientModule,
     InterceptorModule,
     LayoutModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],

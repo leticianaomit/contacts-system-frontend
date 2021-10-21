@@ -40,25 +40,17 @@ export class PersonFormComponent implements OnInit {
     this.dialog.closeAll();
   }
 
-  private updatePerson(person: ResponsePersonDTO) {
-    this.personsService.update(this.idPerson, person).subscribe(
-      () => {
-        console.log('ok');
-      },
-      (err) => {
-        console.log('err');
-      }
-    );
+  refreshPersonList() {
+    this.personsService.getPersonList();
   }
 
-  private savePerson(person: ResponsePersonDTO) {
-    this.personsService.create(person).subscribe(
-      () => {
-        console.log('ok');
-      },
-      (err) => {
-        console.log('err');
-      }
-    );
+  private async updatePerson(person: ResponsePersonDTO) {
+    await this.personsService.updatePerson(this.idPerson, person);
+    this.refreshPersonList();
+  }
+
+  private async savePerson(person: ResponsePersonDTO) {
+    await this.personsService.savePerson(person);
+    this.refreshPersonList();
   }
 }
