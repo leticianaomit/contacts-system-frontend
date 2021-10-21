@@ -54,6 +54,10 @@
         </ng-container>
       </ng-container>
 
+      <tr class="mat-row contact-list__empty" *matNoDataRow>
+        <td class="mat-cell" colspan="5">Nenhum contato foi encontrado</td>
+      </tr>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
