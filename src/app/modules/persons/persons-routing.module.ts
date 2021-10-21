@@ -1,23 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ContactListComponent } from './pages/contact-list/contact-list.component';
+import { PersonListComponent } from './pages/person-list/person-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    data: {
-      breadcrumb: 'Contatos',
-    },
-    children: [
-      {
-        path: '',
-        component: ContactListComponent,
-        pathMatch: 'full',
-        data: {
-          ignoreBreadcrumb: true,
-        },
-      },
-    ],
+    component: PersonListComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: ':id/contacts',
+    component: ContactListComponent,
   },
 ];
 
@@ -25,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ContactRoutingModule {}
+export class PersonsRoutingModule {}

@@ -1,0 +1,12 @@
+.page-title {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(0 0 0 / 5%);
+  display: flex;
+  justify-content: space-between;
+}
+
+::ng-deep .page-title__title {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}

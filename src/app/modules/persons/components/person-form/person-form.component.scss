@@ -1,0 +1,17 @@
+.person-form__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .person-form__divider {
+    margin-right: -24px;
+    margin-left: -24px;
+  }
+  
+  .person-form__content {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  

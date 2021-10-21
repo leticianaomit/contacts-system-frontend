@@ -7,12 +7,12 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', redirectTo: 'contact', pathMatch: 'full' },
+      { path: '', redirectTo: 'persons', pathMatch: 'full' },
       {
-        path: 'contact',
+        path: 'persons',
         loadChildren: () =>
-          import('./modules/contact/contact.module').then(
-            (m) => m.ContactModule
+          import('./modules/persons/persons.module').then(
+            (m) => m.PersonsModule
           ),
       },
     ],

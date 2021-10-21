@@ -1,0 +1,11 @@
+.contact-list__table {
+  margin-left: -16px;
+  margin-right: -16px;
+
+  .contact-list__table-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: end;
+  }
+}

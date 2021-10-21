@@ -1,0 +1,38 @@
+<form (ngSubmit)="submitForm()" [formGroup]="contactForm">
+  <div class="contact-form__header">
+    <h2 fxFlex="auto">{{ idContact ? "Editar" : "Adicionar" }} contato</h2>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-divider class="contact-form__divider"></mat-divider>
+  <mat-dialog-content class="contact-form__content">
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input formControlName="name" required matInput />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>E-mail</mat-label>
+      <input type="email" formControlName="email" matInput />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Telefone</mat-label>
+      <input type="number" formControlName="phone" matInput />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Whatsapp</mat-label>
+      <input type="number" formControlName="whatsapp" matInput />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">Cancelar</button>
+    <button
+      [disabled]="contactForm.invalid"
+      color="primary"
+      mat-raised-button
+      type="submit"
+    >
+      Salvar
+    </button>
+  </mat-dialog-actions>
+</form>

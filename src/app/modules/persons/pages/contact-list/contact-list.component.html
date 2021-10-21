@@ -1,0 +1,61 @@
+<app-page-title>
+  <div class="page-title__title">
+    <mat-icon color="primary">contacts</mat-icon>
+    <span>Contatos</span>
+  </div>
+  <button
+    mat-flat-button
+    type="button"
+    color="primary"
+    (click)="onClickBtnAddContact()"
+  >
+    <mat-icon>add</mat-icon> Adicionar contato
+  </button>
+</app-page-title>
+
+<mat-card>
+  <div class="contact-list__table">
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container *ngFor="let column of tableColumns">
+        <ng-container
+          *ngIf="column.type === 'text'"
+          [matColumnDef]="column.property"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ column.label }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element[column.property] }}
+          </td>
+        </ng-container>
+        <ng-container
+          *ngIf="column.type === 'actions'"
+          [matColumnDef]="column.property"
+        >
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="contact-list__table-actions">
+              <button
+                mat-mini-fab
+                color="accent"
+                (click)="onClickBtnEditContact(element)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                color="warn"
+                (click)="onClickBtnDeleteContact(element.id)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</mat-card>
