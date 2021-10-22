@@ -9,12 +9,7 @@
 
 - Instale o `docker`
 - Clone o repositório
-- Execute nesse diretório `docker-compose up`
+- Execute no diretório o comando `docker-compose up`
 
-Ou se preferir:
-
-- Clone o repositório
-- Instale as dependências com `npm`
-- Execute `npm run start`
-
-Agora você pode acessar [http://localhost:4200](http://localhost:4200) no seu navegador.
+Todas os serviços necessários serão executados.
+Agora você pode acessar [http://localhost:80](http://localhost:80) no seu navegador.

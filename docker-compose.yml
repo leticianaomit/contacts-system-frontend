@@ -1,9 +1,34 @@
-version: '3.1'
+version: "3.1"
 
 services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    container_name: "contacts-system-mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: contacts-system
+
+  backend:
+    image: leticiatakeshiro/contacts-system-backend
+    ports:
+      - "3000:3000"
+    container_name: "contacts-system-backend"
+    restart: always
+    environment:
+      DATABASE_TYPE: mysql
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: docker
+      DATABASE_NAME: contacts-system
+      DATABASE_PORT: 3306
+
   frontend:
     image: leticiatakeshiro/contacts-system-frontend
     ports:
-      - '4200:4200'
-    container_name: 'contacts-system-frontend'
+      - "80:80"
+    container_name: "contacts-system-frontend"
     restart: always
